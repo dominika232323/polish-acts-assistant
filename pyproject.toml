@@ -1,0 +1,24 @@
+[project]
+name = "polish-acts-assistant"
+version = "0.1.0"
+description = "RAG system answering questions about Polish acts from the 2026 Journal of Laws (Dziennik Ustaw), citing specific articles"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501", "UP047"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.17.2",
+]
