@@ -1,0 +1,353 @@
+[
+  {
+    "ELI": "DU/2026/179",
+    "displayAddress": "Dz.U. 2026 poz. 179",
+    "pos": 179,
+    "title": "Ustawa z dnia 23 stycznia 2026 r. o ustanowieniu Dnia Inwalidy Wojennego",
+    "announcementDate": "2026-01-23",
+    "promulgation": "2026-02-17",
+    "entryIntoForce": "2026-03-04",
+    "status": "obowiązujący",
+    "keywords": [
+      "inwalidzi wojenni i wojskowi",
+      "święta",
+      "uczczenie pamięci"
+    ],
+    "file": "D20260179.pdf",
+    "source_url": "https://api.sejm.gov.pl/eli/acts/DU/2026/179/text.pdf"
+  },
+  {
+    "ELI": "DU/2026/187",
+    "displayAddress": "Dz.U. 2026 poz. 187",
+    "pos": 187,
+    "title": "Ustawa z dnia 23 stycznia 2026 r. o zawodzie psychologa oraz samorządzie zawodowym psychologów",
+    "announcementDate": "2026-01-23",
+    "promulgation": "2026-02-18",
+    "entryIntoForce": "2028-05-19",
+    "status": "obowiązujący",
+    "keywords": [
+      "samorząd zawodowy",
+      "ochrona zdrowia psychicznego"
+    ],
+    "file": "D20260187.pdf",
+    "source_url": "https://api.sejm.gov.pl/eli/acts/DU/2026/187/text.pdf"
+  },
+  {
+    "ELI": "DU/2026/435",
+    "displayAddress": "Dz.U. 2026 poz. 435",
+    "pos": 435,
+    "title": "Ustawa z dnia 13 marca 2026 r. o niekaraniu obywateli Rzeczypospolitej Polskiej biorących udział po stronie Ukrainy w konflikcie zbrojnym wywołanym agresją Federacji Rosyjskiej na Ukrainę",
+    "announcementDate": "2026-03-13",
+    "promulgation": "2026-03-31",
+    "entryIntoForce": "2026-07-01",
+    "status": "obowiązujący",
+    "keywords": [
+      "karne prawo"
+    ],
+    "file": "D20260435.pdf",
+    "source_url": "https://api.sejm.gov.pl/eli/acts/DU/2026/435/text.pdf"
+  },
+  {
+    "ELI": "DU/2026/451",
+    "displayAddress": "Dz.U. 2026 poz. 451",
+    "pos": 451,
+    "title": "Ustawa z dnia 27 lutego 2026 r. o wojewódzkich zespołach koordynacji do spraw polityki umiejętności",
+    "announcementDate": "2026-02-27",
+    "promulgation": "2026-04-02",
+    "entryIntoForce": "2026-07-01",
+    "status": "obowiązujący",
+    "keywords": [
+      "praca",
+      "województwa",
+      "kwalifikacje",
+      "szkolnictwo zawodowe",
+      "oświata i wychowanie",
+      "urzędy pracy",
+      "planowanie społeczno-gospodarcze"
+    ],
+    "file": "D20260451.pdf",
+    "source_url": "https://api.sejm.gov.pl/eli/acts/DU/2026/451/text.pdf"
+  },
+  {
+    "ELI": "DU/2026/465",
+    "displayAddress": "Dz.U. 2026 poz. 465",
+    "pos": 465,
+    "title": "Ustawa z dnia 13 lutego 2026 r. o działalności kosmicznej",
+    "announcementDate": "2026-02-13",
+    "promulgation": "2026-04-03",
+    "entryIntoForce": "2026-04-18",
+    "status": "obowiązujący",
+    "keywords": [
+      "działalność kosmiczna",
+      "kosmos"
+    ],
+    "file": "D20260465.pdf",
+    "source_url": "https://api.sejm.gov.pl/eli/acts/DU/2026/465/text.pdf"
+  },
+  {
+    "ELI": "DU/2026/548",
+    "displayAddress": "Dz.U. 2026 poz. 548",
+    "pos": 548,
+    "title": "Ustawa z dnia 27 marca 2026 r. o zarządzaniu danymi",
+    "announcementDate": "2026-03-27",
+    "promulgation": "2026-04-22",
+    "entryIntoForce": "2026-07-23",
+    "status": "obowiązujący",
+    "keywords": [
+      "cyfryzacja",
+      "zarządzanie danymi"
+    ],
+    "file": "D20260548.pdf",
+    "source_url": "https://api.sejm.gov.pl/eli/acts/DU/2026/548/text.pdf"
+  },
+  {
+    "ELI": "DU/2026/755",
+    "displayAddress": "Dz.U. 2026 poz. 755",
+    "pos": 755,
+    "title": "Ustawa z dnia 15 maja 2026 r. o Krajowym Rejestrze Oznakowanych Psów i Kotów",
+    "announcementDate": "2026-05-15",
+    "promulgation": "2026-06-10",
+    "entryIntoForce": "2028-06-11",
+    "status": "obowiązujący",
+    "keywords": [
+      "rejestry",
+      "psy",
+      "zwierzęta",
+      "oznakowanie"
+    ],
+    "file": "D20260755.pdf",
+    "source_url": "https://api.sejm.gov.pl/eli/acts/DU/2026/755/text.pdf"
+  },
+  {
+    "ELI": "DU/2026/760",
+    "displayAddress": "Dz.U. 2026 poz. 760",
+    "pos": 760,
+    "title": "Ustawa z dnia 15 maja 2026 r. o udziale Rzeczypospolitej Polskiej w systemie Eurodac",
+    "announcementDate": "2026-05-15",
+    "promulgation": "2026-06-11",
+    "entryIntoForce": "2026-06-12",
+    "status": "obowiązujący",
+    "keywords": [
+      "biometria",
+      "cudzoziemcy",
+      "daktyloskopia",
+      "systemy teleinformatyczne"
+    ],
+    "file": "D20260760.pdf",
+    "source_url": "https://api.sejm.gov.pl/eli/acts/DU/2026/760/text.pdf"
+  },
+  {
+    "ELI": "DU/2026/821",
+    "displayAddress": "Dz.U. 2026 poz. 821",
+    "pos": 821,
+    "title": "Ustawa z dnia 29 maja 2026 r. o utworzeniu Wojskowej Akademii Medycznej",
+    "announcementDate": "2026-05-29",
+    "promulgation": "2026-06-22",
+    "entryIntoForce": "2026-06-23",
+    "status": "obowiązujący",
+    "keywords": [
+      "lekarze",
+      "szkolnictwo wyższe",
+      "szkolnictwo medyczne"
+    ],
+    "file": "D20260821.pdf",
+    "source_url": "https://api.sejm.gov.pl/eli/acts/DU/2026/821/text.pdf"
+  },
+  {
+    "ELI": "DU/2026/830",
+    "displayAddress": "Dz.U. 2026 poz. 830",
+    "pos": 830,
+    "title": "Ustawa z dnia 29 maja 2026 r. o szczególnych środkach ochrony w postępowaniu cywilnym osób uczestniczących w debacie publicznej",
+    "announcementDate": "2026-05-29",
+    "promulgation": "2026-06-23",
+    "entryIntoForce": "2026-07-08",
+    "status": "obowiązujący",
+    "keywords": [
+      "ochrona",
+      "debata publiczna",
+      "cywilne postępowanie"
+    ],
+    "file": "D20260830.pdf",
+    "source_url": "https://api.sejm.gov.pl/eli/acts/DU/2026/830/text.pdf"
+  },
+  {
+    "ELI": "DU/2026/912",
+    "displayAddress": "Dz.U. 2026 poz. 912",
+    "pos": 912,
+    "title": "Ustawa z dnia 11 czerwca 2026 r. o związku metropolitalnym w województwie pomorskim",
+    "announcementDate": "2026-06-11",
+    "promulgation": "2026-07-07",
+    "entryIntoForce": "2026-07-31",
+    "status": "obowiązujący",
+    "keywords": [
+      "związek metropolitalny",
+      "woj. pomorskie"
+    ],
+    "file": "D20260912.pdf",
+    "source_url": "https://api.sejm.gov.pl/eli/acts/DU/2026/912/text.pdf"
+  },
+  {
+    "ELI": "DU/2026/971",
+    "displayAddress": "Dz.U. 2026 poz. 971",
+    "pos": 971,
+    "title": "Ustawa z dnia 29 maja 2026 r. o szczególnych rozwiązaniach związanych z wynikami ewaluacji jakości działalności naukowej za lata 2022-2025",
+    "announcementDate": "2026-05-29",
+    "promulgation": "2026-07-21",
+    "entryIntoForce": "2026-08-05",
+    "status": "obowiązujący",
+    "keywords": [
+      "stopnie i tytuły naukowe",
+      "nauka",
+      "szkolnictwo wyższe"
+    ],
+    "file": "D20260971.pdf",
+    "source_url": "https://api.sejm.gov.pl/eli/acts/DU/2026/971/text.pdf"
+  },
+  {
+    "ELI": "DU/2026/985",
+    "displayAddress": "Dz.U. 2026 poz. 985",
+    "pos": 985,
+    "title": "Ustawa z dnia 29 maja 2026 r. o szczególnych rozwiązaniach w zakresie rozpoznawania spraw dotyczących zawartych z konsumentami umów kredytu denominowanego lub indeksowanego do franka szwajcarskiego",
+    "announcementDate": "2026-05-29",
+    "promulgation": "2026-07-23",
+    "entryIntoForce": "2026-08-07",
+    "status": "obowiązujący",
+    "keywords": [
+      "konsumenci",
+      "cywilne postępowanie",
+      "kredyty i pożyczki"
+    ],
+    "file": "D20260985.pdf",
+    "source_url": "https://api.sejm.gov.pl/eli/acts/DU/2026/985/text.pdf"
+  },
+  {
+    "ELI": "DU/2026/986",
+    "displayAddress": "Dz.U. 2026 poz. 986",
+    "pos": 986,
+    "title": "Ustawa z dnia 11 czerwca 2026 r. o osobach starszych i koordynacji opieki długoterminowej",
+    "announcementDate": "2026-06-11",
+    "promulgation": "2026-07-23",
+    "entryIntoForce": "2026-08-07",
+    "status": "obowiązujący",
+    "keywords": [
+      "socjalna działalność",
+      "położne",
+      "pomoc społeczna",
+      "finansowanie",
+      "opieka zdrowotna",
+      "pielęgniarstwo",
+      "niepełnosprawni"
+    ],
+    "file": "D20260986.pdf",
+    "source_url": "https://api.sejm.gov.pl/eli/acts/DU/2026/986/text.pdf"
+  },
+  {
+    "ELI": "DU/2026/1003",
+    "displayAddress": "Dz.U. 2026 poz. 1003",
+    "pos": 1003,
+    "title": "Ustawa z dnia 3 lipca 2026 r. o systemach sztucznej inteligencji",
+    "announcementDate": "2026-07-03",
+    "promulgation": "2026-07-27",
+    "entryIntoForce": "2026-08-11",
+    "status": "obowiązujący",
+    "keywords": [
+      "postępowanie egzekucyjne w administracji",
+      "radiofonia i telewizja",
+      "sztuczna inteligencja",
+      "cyberbezpieczeństwo",
+      "kodeks postępowania cywilnego",
+      "koszty sądowe w sprawach cywilnych",
+      "systemy teleinformatyczne"
+    ],
+    "file": "D20261003.pdf",
+    "source_url": "https://api.sejm.gov.pl/eli/acts/DU/2026/1003/text.pdf"
+  },
+  {
+    "ELI": "DU/2026/1098",
+    "displayAddress": "Dz.U. 2026 poz. 1098",
+    "pos": 1098,
+    "title": "Ustawa z dnia 3 lipca 2026 r. o osobistych kontach inwestycyjnych",
+    "announcementDate": "2026-07-03",
+    "promulgation": "2026-08-18",
+    "entryIntoForce": "2027-01-01",
+    "status": "obowiązujący",
+    "keywords": [
+      "fundusze",
+      "nadzór",
+      "instrumenty finansowe",
+      "podatki",
+      "ordynacja podatkowa",
+      "fundusze emerytalne",
+      "inwestycje",
+      "ryczałt",
+      "podatek dochodowy od osób fizycznych",
+      "bankowe prawo"
+    ],
+    "file": "D20261098.pdf",
+    "source_url": "https://api.sejm.gov.pl/eli/acts/DU/2026/1098/text.pdf"
+  },
+  {
+    "ELI": "DU/2026/1287",
+    "displayAddress": "Dz.U. 2026 poz. 1287",
+    "pos": 1287,
+    "title": "Ustawa z dnia 18 września 2026 r. o podatku od nadzwyczajnych zysków osiągniętych w okresie od marca 2026 r. do marca 2027 r. ze zbycia paliw ciekłych",
+    "announcementDate": "2026-09-18",
+    "promulgation": "2026-10-01",
+    "entryIntoForce": "2026-11-01",
+    "status": "obowiązujący",
+    "keywords": [
+      "paliwa",
+      "podatek dochodowy od osób fizycznych",
+      "podatek dochodowy od osób prawnych"
+    ],
+    "file": "D20261287.pdf",
+    "source_url": "https://api.sejm.gov.pl/eli/acts/DU/2026/1287/text.pdf"
+  },
+  {
+    "ELI": "DU/2026/1308",
+    "displayAddress": "Dz.U. 2026 poz. 1308",
+    "pos": 1308,
+    "title": "Ustawa z dnia 4 września 2026 r. o Uniwersytecie Mazowieckim w Płocku",
+    "announcementDate": "2026-09-04",
+    "promulgation": "2026-10-08",
+    "entryIntoForce": "2026-10-15",
+    "status": "akt jednorazowy",
+    "keywords": [
+      "szkolnictwo wyższe"
+    ],
+    "file": "D20261308.pdf",
+    "source_url": "https://api.sejm.gov.pl/eli/acts/DU/2026/1308/text.pdf"
+  },
+  {
+    "ELI": "DU/2026/1343",
+    "displayAddress": "Dz.U. 2026 poz. 1343",
+    "pos": 1343,
+    "title": "Ustawa z dnia 18 września 2026 r. o szczególnych rozwiązaniach związanych z organizacją XXVI Światowego Jamboree Skautowego w Rzeczypospolitej Polskiej w 2027 r.",
+    "announcementDate": "2026-09-18",
+    "promulgation": "2026-10-16",
+    "entryIntoForce": "2026-10-31",
+    "status": "obowiązujący",
+    "keywords": [
+      "harcerstwo",
+      "imprezy masowe"
+    ],
+    "file": "D20261343.pdf",
+    "source_url": "https://api.sejm.gov.pl/eli/acts/DU/2026/1343/text.pdf"
+  },
+  {
+    "ELI": "DU/2026/1476",
+    "displayAddress": "Dz.U. 2026 poz. 1476",
+    "pos": 1476,
+    "title": "Ustawa z dnia 18 września 2026 r. o umorzeniu należności dochodzonych przez Zakład Ubezpieczeń Społecznych powstałych przed dniem 1 stycznia 1999 r.",
+    "announcementDate": "2026-09-18",
+    "promulgation": "2026-11-09",
+    "entryIntoForce": "2027-05-01",
+    "status": "obowiązujący",
+    "keywords": [
+      "ubezpieczenia społeczne",
+      "należności państwowe"
+    ],
+    "file": "D20261476.pdf",
+    "source_url": "https://api.sejm.gov.pl/eli/acts/DU/2026/1476/text.pdf"
+  }
+]
