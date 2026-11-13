@@ -8,3 +8,6 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 # Downloaded acts: PDFs + metadata manifest written by `acts.fetch`.
 DATA_DIR = PROJECT_ROOT / "data" / "raw"
 ACTS_MANIFEST = DATA_DIR / "acts.json"
+
+# Test set (golden set): questions with expected answers and sources, one JSON object per line.
+GOLDEN_SET = PROJECT_ROOT / "eval" / "golden.jsonl"
