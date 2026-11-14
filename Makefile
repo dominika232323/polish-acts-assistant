@@ -1,4 +1,4 @@
-.PHONY: help setup pull check fetch parse test coverage lint
+.PHONY: help setup pull check fetch parse ingest test coverage lint
 
 DATA ?=
 Q ?=
@@ -22,6 +22,9 @@ fetch: ## download the acts (PDF + metadata) into data/raw/
 
 parse: ## save parsed text of the acts into data/parsed/ (for checking and reading)
 	uv run python scripts/parse_acts.py
+
+ingest: ## index the acts into Qdrant: parse → chunk → embed (rebuilds the collection)
+	uv run python scripts/ingest.py
 
 test: ## unit tests (no network)
 	uv run pytest -q

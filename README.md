@@ -14,6 +14,7 @@ make pull      # download the Ollama models set in .env
 make check     # smoke test: Ollama, models, chat, embedding, context window
 make fetch     # download the acts into data/raw/
 make parse     # save parsed text of the acts into data/parsed/
+make ingest    # index the acts into Qdrant (parse → chunk → embed)
 make test      # unit tests
 make coverage  # unit tests with coverage report (htmlcov/index.html)
 make lint      # ruff
@@ -84,6 +85,19 @@ chapter, page and the act's title and address. Rules:
 - the embedding text starts with the act and chapter name, which gives context to short
   articles.
 
+## Index
+
+`make ingest` parses and chunks all acts, embeds the chunks with `EMBED_MODEL` and stores them
+in [Qdrant](https://qdrant.tech) – embedded mode, data in `.qdrant/` (no server needed, but
+only one process can use it at a time). The collection is rebuilt from scratch on every run
+(about a minute for the whole corpus), so no stale chunks are left after a chunking change.
+
+| setting | default | |
+|---|---|---|
+| `QDRANT_URL` | `local:.qdrant` | or `http://localhost:6333` for a Qdrant server |
+| `COLLECTION` | `acts2026` | |
+| `TOP_K` | `5` | number of chunks passed to the model |
+
 ## Test set
 
 `eval/golden.jsonl` – questions with expected answers and sources, one JSON object per line:
@@ -110,11 +124,14 @@ src/acts/
   fetch.py        downloading acts from the Sejm ELI API
   parse.py        PDF of an act → paragraphs of clean text
   chunking.py     paragraphs → chunks: one article per chunk, long ones split
+  store.py        Qdrant: collection, upsert, search
+  ingest.py       parse → chunk → embed → Qdrant
 scripts/
   pull_models.py  download Ollama models (make pull)
   check_env.py    smoke test (make check)
   fetch_acts.py   command line for downloading (make fetch)
   parse_acts.py   save parsed text of the acts (make parse)
+  ingest.py       index the acts (make ingest)
 data/raw/         downloaded acts + acts.json
 data/parsed/      parsed text of the acts (not committed)
 eval/golden.jsonl test set

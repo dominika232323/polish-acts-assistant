@@ -53,6 +53,12 @@ class Settings:
     # Prepended to queries only; empty string = no instruction.
     embed_query_instruction: str
 
+    # "local:<dir>" = embedded Qdrant in a directory (relative to the repo root),
+    # "http://localhost:6333" = Qdrant server, ":memory:" = in memory (tests).
+    qdrant_url: str
+    collection: str
+    top_k: int
+
     @property
     def ollama_url(self) -> str:
         """Ollama's own API (`/api/...`) lives next to the OpenAI-compatible `/v1`."""
@@ -79,6 +85,9 @@ def load_settings(env_file: Path | None = ENV_FILE) -> Settings:
             "EMBED_QUERY_INSTRUCTION",
             "Given a question, retrieve passages from Polish acts that answer it",
         ),
+        qdrant_url=_env("QDRANT_URL", "local:.qdrant"),
+        collection=_env("COLLECTION", "acts2026"),
+        top_k=int(_env("TOP_K", "5")),
     )
 
 
