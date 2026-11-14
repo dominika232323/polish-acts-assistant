@@ -43,10 +43,17 @@ def chat_kwargs(settings: Settings) -> dict[str, Any]:
     return kwargs
 
 
-def chat(messages: list[dict[str, str]], settings: Settings) -> str:
-    """Single chat completion; returns the answer text."""
+def chat(
+    messages: list[dict[str, str]], settings: Settings, response_format: dict | None = None
+) -> str:
+    """Single chat completion; returns the answer text.
+
+    `response_format` (e.g. a JSON schema) is passed to the server as is; Ollama then
+    constrains decoding, so the model can only write JSON matching the schema.
+    """
+    extra = {"response_format": response_format} if response_format else {}
     response = llm_client(settings).chat.completions.create(
-        **chat_kwargs(settings), messages=messages
+        **chat_kwargs(settings), messages=messages, **extra
     )
 
     return response.choices[0].message.content or ""

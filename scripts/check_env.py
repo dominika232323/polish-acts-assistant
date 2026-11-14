@@ -1,4 +1,4 @@
-"""Smoke test of the environment: Ollama, models, chat, embedding, context window.
+"""Smoke test: Ollama, models, chat, embedding, context window, acts, index, one answer.
 
 Usage:
     uv run python scripts/check_env.py   # or: make check

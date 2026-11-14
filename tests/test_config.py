@@ -44,3 +44,9 @@ def test_env_file_is_loaded(tmp_path):
     env.write_text("LLM_MODEL=from-file\n", encoding="utf-8")
 
     assert load_settings(env_file=env).llm_model == "from-file"
+
+
+def test_vector_store_defaults():
+    s = load_settings(env_file=None)
+
+    assert (s.qdrant_url, s.collection, s.top_k) == ("local:.qdrant", "acts2026", 5)
