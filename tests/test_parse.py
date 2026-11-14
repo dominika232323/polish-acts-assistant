@@ -218,3 +218,20 @@ def test_real_act_articles_are_numbered_in_order():
 @needs_pdfs
 def test_short_act():
     assert [p.text[:7] for p in parse_pdf(SHORT_ACT)][-3:] == ["Art. 1.", "Art. 2.", "Art. 3."]
+
+
+def test_annex_heading_in_small_font_is_kept(pdf):
+    paragraphs = pdf(
+        FakePage(block(line(span("Art. 25. Ustawa wchodzi w życie po upływie 14 dni.")))),
+        FakePage(
+            block(line(span("Załącznik do ustawy z dnia 29 maja 2026 r. ", 8.0))),
+            block(line(span("(Dz. U. poz. 821) ", 8.0))),
+            block(line(span("WYKAZ NIERUCHOMOŚCI"))),
+        ),
+    )
+
+    assert [p.text for p in paragraphs] == [
+        "Art. 25. Ustawa wchodzi w życie po upływie 14 dni.",
+        "Załącznik do ustawy z dnia 29 maja 2026 r.",
+        "WYKAZ NIERUCHOMOŚCI",
+    ]

@@ -27,6 +27,9 @@ BODY_MAX_SIZE = 11.0
 
 _RUNNING_HEADER = re.compile(r"^(Dziennik Ustaw|– \d+ –|Poz\. \d+)$")
 _SIGNATURE = re.compile(r"^(Prezydent Rzeczypospolitej Polskiej|Marszałek Sejmu):")
+# Annex heading ("Załącznik do ustawy z dnia …") is set in a small font, but marks where the
+# annex starts – without it the annex would be glued to the last article.
+_ANNEX = re.compile(r"^Załącznik( nr \d+)? do ustawy")
 # Lowercase start that is NOT a letter point ("a) …", "ab) …") – the rest of the previous
 # paragraph (continued on the next page, or split into two blocks by the PDF).
 _CONTINUATION = re.compile(r"^(?![a-z]{1,2}\) )[a-ząćęłńóśźż]")
@@ -84,7 +87,8 @@ def _span_text(span: dict) -> str:
 def _body_lines(block: dict) -> list[str]:
     """Lines of a block written in the body font, without running headers.
 
-    Lines without any body-font span (footnotes, the title header) are skipped entirely.
+    Lines without any body-font span (footnotes, the title header) are skipped entirely,
+    except the annex heading.
     """
     lines = []
 
@@ -92,6 +96,11 @@ def _body_lines(block: dict) -> list[str]:
         spans = line["spans"]
 
         if not any(BODY_MIN_SIZE <= s["size"] <= BODY_MAX_SIZE for s in spans):
+            heading = re.sub(r"\s+", " ", "".join(s["text"] for s in spans)).strip()
+
+            if _ANNEX.match(heading):
+                lines.append(heading)
+
             continue
 
         text = "".join(_span_text(span) for span in spans)

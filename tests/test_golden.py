@@ -18,8 +18,10 @@ from acts.config import ACTS_MANIFEST, GOLDEN_SET
 FIELDS = {"id", "question", "expected_answer", "sources", "type"}
 TYPES = {"easy", "multi", "oos"}
 SOURCE_FIELDS = {"eli", "art", "ust"}
-# Article / paragraph numbers are strings: "12", "12a".
-NUMBER = re.compile(r"^\d+[a-z]*$")
+# Article / paragraph numbers are strings: "12", "12a", "479^88a".
+NUMBER = re.compile(r"^\d+[a-z]*(\^\w+)?$")
+# Parts of an act that are not numbered articles (see acts.chunking).
+SPECIAL_ARTICLES = re.compile(r"^(preambuła|załącznik( \d+)?)$")
 
 
 def load_lines() -> list[tuple[int, str]]:
@@ -66,7 +68,9 @@ def test_sources_point_to_articles_of_known_acts(line_no, line):
     for source in json.loads(line)["sources"]:
         assert {"eli", "art"} <= set(source) <= SOURCE_FIELDS, f"line {line_no}: {source}"
         assert source["eli"] in KNOWN_ELI, f"line {line_no}: unknown act {source['eli']!r}"
-        assert NUMBER.match(source["art"]), f"line {line_no}: art {source['art']!r}"
+        assert NUMBER.match(source["art"]) or SPECIAL_ARTICLES.match(source["art"]), (
+            f"line {line_no}: art {source['art']!r}"
+        )
 
         if "ust" in source:
             assert NUMBER.match(source["ust"]), f"line {line_no}: ust {source['ust']!r}"

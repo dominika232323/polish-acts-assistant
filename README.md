@@ -69,6 +69,21 @@ make fetch ARGS=--force                         # re-download existing PDFs
 uv run python scripts/fetch_acts.py --discover  # list standalone 2026 acts in the API
 ```
 
+## Chunking
+
+`src/acts/chunking.py` splits every act into **one chunk per article** (1153 chunks from the 20
+acts). Each chunk keeps what is needed to cite it: `eli`, `art`, paragraph numbers (`ust`),
+chapter, page and the act's title and address. Rules:
+
+- articles quoted in provisions amending other acts („Art. 479^88a. …”) stay inside the
+  amending article – the chunker tracks „ ” quotes;
+- articles longer than 1500 characters are split at paragraph / point boundaries; later
+  parts start with the article's opening paragraph (`Art. 4. Użyte w ustawie określenia
+  oznaczają: […]`);
+- the preamble and annexes are separate chunks (`art` = `preambuła`, `załącznik`);
+- the embedding text starts with the act and chapter name, which gives context to short
+  articles.
+
 ## Test set
 
 `eval/golden.jsonl` – questions with expected answers and sources, one JSON object per line:
@@ -94,6 +109,7 @@ src/acts/
   check.py        environment smoke test
   fetch.py        downloading acts from the Sejm ELI API
   parse.py        PDF of an act → paragraphs of clean text
+  chunking.py     paragraphs → chunks: one article per chunk, long ones split
 scripts/
   pull_models.py  download Ollama models (make pull)
   check_env.py    smoke test (make check)
