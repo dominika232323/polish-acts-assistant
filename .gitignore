@@ -222,3 +222,4 @@ __marimo__/
 # polish-acts-assistant
 IDM-W4.pdf
 data/raw/*.pdf
+data/parsed/

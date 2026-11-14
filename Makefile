@@ -1,4 +1,4 @@
-.PHONY: help setup pull check fetch test coverage lint
+.PHONY: help setup pull check fetch parse test coverage lint
 
 DATA ?=
 Q ?=
@@ -19,6 +19,9 @@ check: ## smoke test: Ollama, models, chat, embedding, context window
 
 fetch: ## download the acts (PDF + metadata) into data/raw/
 	uv run python scripts/fetch_acts.py $(ARGS)
+
+parse: ## save parsed text of the acts into data/parsed/ (for checking and reading)
+	uv run python scripts/parse_acts.py
 
 test: ## unit tests (no network)
 	uv run pytest -q

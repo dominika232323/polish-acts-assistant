@@ -13,6 +13,7 @@ make setup     # dependencies + .env
 make pull      # download the Ollama models set in .env
 make check     # smoke test: Ollama, models, chat, embedding, context window
 make fetch     # download the acts into data/raw/
+make parse     # save parsed text of the acts into data/parsed/
 make test      # unit tests
 make coverage  # unit tests with coverage report (htmlcov/index.html)
 make lint      # ruff
@@ -57,6 +58,12 @@ acts ("o zmianie"), ratifications and budget acts. The list is fixed in `src/act
 - `data/raw/acts.json` – metadata: ELI, address (e.g. "Dz.U. 2026 poz. 1003"), title, dates,
   status, keywords (committed)
 
+`make parse` writes the cleaned text of every act to `data/parsed/D2026XXXX.txt` (one
+paragraph per line) – for checking the parser and for reading the acts when writing test
+questions. The parser (`src/acts/parse.py`) keeps only the act text (10 pt font), so footnotes,
+page headers and the President's signature are removed; superscript article numbers are
+written as `Art. 479^88a`.
+
 ```bash
 make fetch ARGS=--force                         # re-download existing PDFs
 uv run python scripts/fetch_acts.py --discover  # list standalone 2026 acts in the API
@@ -86,11 +93,14 @@ src/acts/
   embeddings.py   document and query embeddings
   check.py        environment smoke test
   fetch.py        downloading acts from the Sejm ELI API
+  parse.py        PDF of an act → paragraphs of clean text
 scripts/
   pull_models.py  download Ollama models (make pull)
   check_env.py    smoke test (make check)
   fetch_acts.py   command line for downloading (make fetch)
+  parse_acts.py   save parsed text of the acts (make parse)
 data/raw/         downloaded acts + acts.json
+data/parsed/      parsed text of the acts (not committed)
 eval/golden.jsonl test set
 tests/            unit tests (no network)
 ```
