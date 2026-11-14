@@ -13,7 +13,7 @@ setup: ## install dependencies (uv) and create .env
 pull: ## download the Ollama models set in .env
 	uv run python scripts/pull_models.py
 
-check: ## smoke test: Ollama, models, chat, embedding, context window
+check: ## smoke test: Ollama, models, acts, index and one answer end to end
 	uv run python scripts/check_env.py
 
 fetch: ## download the acts (PDF + metadata) into data/raw/

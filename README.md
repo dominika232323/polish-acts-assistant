@@ -11,7 +11,7 @@ Requirements: [uv](https://docs.astral.sh/uv/), [Ollama](https://ollama.com) (se
 ```bash
 make setup     # dependencies + .env
 make pull      # download the Ollama models set in .env
-make check     # smoke test: Ollama, models, chat, embedding, context window
+make check     # smoke test: Ollama, models, acts, index and one answer end to end
 make fetch     # download the acts into data/raw/
 make parse     # save parsed text of the acts into data/parsed/
 make ingest    # index the acts into Qdrant (parse → chunk → embed)

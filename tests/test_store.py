@@ -7,7 +7,16 @@ from acts import store
 from acts.chunking import Chunk
 from acts.config import load_settings
 from acts.ingest import ingest
-from acts.store import Hit, count, get_client, point_id, recreate_collection, search, upsert_chunks
+from acts.store import (
+    Hit,
+    count,
+    get_client,
+    point_id,
+    recreate_collection,
+    sample_payload,
+    search,
+    upsert_chunks,
+)
 
 
 @pytest.fixture(autouse=True)
@@ -98,6 +107,17 @@ def test_local_url_points_into_repository(tmp_path, monkeypatch):
     store.close_clients()
 
     assert (tmp_path / "qdrant-test").is_dir()
+
+
+def test_sample_payload():
+    client = get_client(":memory:")
+    assert sample_payload(client, "test") == {}
+
+    recreate_collection(client, "test", dim=2)
+    assert sample_payload(client, "test") == {}
+
+    upsert_chunks(client, "test", [chunk("1")], [[1.0, 0.0]], "fake-embed")
+    assert sample_payload(client, "test")["embed_model"] == "fake-embed"
 
 
 def test_get_client_is_cached():

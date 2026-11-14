@@ -125,3 +125,13 @@ def count(client: QdrantClient, collection: str) -> int:
         return 0
 
     return client.count(collection_name=collection, exact=True).count
+
+
+def sample_payload(client: QdrantClient, collection: str) -> dict:
+    """Payload of one point ({} if the collection is empty or does not exist)."""
+    if not client.collection_exists(collection):
+        return {}
+
+    points, _ = client.scroll(collection_name=collection, limit=1, with_payload=True)
+
+    return dict(points[0].payload or {}) if points else {}

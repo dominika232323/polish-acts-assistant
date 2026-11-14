@@ -1,7 +1,8 @@
 """Environment smoke test (`make check`).
 
-Checks, step by step, everything the system needs and suggests a fix on failure. Steps depend
-on the previous ones, so we stop at the first failure.
+Checks, step by step, everything the system needs – Ollama and models, the downloaded acts,
+the Qdrant index – and finally answers one question end to end. Suggests a fix on failure.
+Steps depend on the previous ones, so we stop at the first failure.
 """
 
 from __future__ import annotations
@@ -12,12 +13,19 @@ from collections.abc import Callable
 
 import httpx
 
-from acts.config import Settings
+from acts.chunking import load_manifest
+from acts.config import ACTS_MANIFEST, DATA_DIR, Settings
 from acts.embeddings import embed_documents, embed_query
+from acts.generate import answer
 from acts.llm import chat
+from acts.store import count, get_client, sample_payload
 
 # Below this Ollama silently truncates prompts with a few retrieved articles.
 MIN_CONTEXT = 8192
+
+# End-to-end question with a known source: art. 1 of the act on Dzień Inwalidy Wojennego.
+SMOKE_QUESTION = "Kiedy obchodzimy Dzień Inwalidy Wojennego?"
+SMOKE_SOURCE = {"eli": "DU/2026/179", "art": "1"}
 
 
 class CheckFailed(Exception):
@@ -131,6 +139,62 @@ def check_context_window(settings: Settings) -> str:
     return f"{ctx} tokens"
 
 
+def check_data() -> str:
+    """acts.json and every PDF it lists are downloaded."""
+    if not ACTS_MANIFEST.exists():
+        raise CheckFailed(f"{ACTS_MANIFEST.name} not found in {DATA_DIR}", "Run `make fetch`.")
+
+    acts = load_manifest(ACTS_MANIFEST)
+    missing = [meta["file"] for meta in acts if not (DATA_DIR / meta["file"]).exists()]
+
+    if missing:
+        raise CheckFailed(f"Missing PDFs: {', '.join(missing)}", "Run `make fetch`.")
+
+    return f"{len(acts)} acts"
+
+
+def check_index(settings: Settings) -> str:
+    """The collection exists, is not empty and was built with the current embedding model."""
+    try:
+        client = get_client(settings.qdrant_url)
+        points = count(client, settings.collection)
+    except RuntimeError as err:  # embedded Qdrant: directory locked by another process
+        raise CheckFailed(
+            f"Cannot open the index: {err}",
+            "Another process (`make ask`, an eval, a notebook) is using it – wait for it to end.",
+        ) from err
+
+    if not points:
+        raise CheckFailed(
+            f"Collection {settings.collection!r} is empty or missing", "Run `make ingest`."
+        )
+
+    indexed_with = sample_payload(client, settings.collection).get("embed_model")
+
+    if indexed_with != settings.embed_model:
+        raise CheckFailed(
+            f"Index built with {indexed_with!r}, but EMBED_MODEL={settings.embed_model!r}",
+            "Run `make ingest` again.",
+        )
+
+    return f"{points} chunks in {settings.collection!r} ({indexed_with})"
+
+
+def check_answer(settings: Settings) -> str:
+    """One question through the whole pipeline must cite its known source."""
+    result = answer(SMOKE_QUESTION, settings)
+
+    if SMOKE_SOURCE not in result.sources():
+        found = [h.metadata.get("id") for h in result.hits]
+        raise CheckFailed(
+            f"The answer does not cite {SMOKE_SOURCE} (retrieved: {found}, "
+            f"answer: „{result.answer.text[:80]}”)",
+            'Check the index (`make ingest`) and the model (`make ask Q="…" ARGS=--context`).',
+        )
+
+    return f"cites art. {SMOKE_SOURCE['art']} ({result.retrieve_s + result.generate_s:.1f}s)"
+
+
 def steps(settings: Settings) -> list[tuple[str, Callable[[], str]]]:
     """(name, function) pairs; each function returns a short success note or raises CheckFailed."""
     result: list[tuple[str, Callable[[], str]]] = []
@@ -146,7 +210,12 @@ def steps(settings: Settings) -> list[tuple[str, Callable[[], str]]]:
     if settings.is_local:
         result.append(("Context window", lambda: check_context_window(settings)))
 
-    result.append(("Embedding", lambda: check_embedding(settings)))
+    result += [
+        ("Embedding", lambda: check_embedding(settings)),
+        ("Acts downloaded", check_data),
+        ("Index", lambda: check_index(settings)),
+        ("Answer", lambda: check_answer(settings)),
+    ]
 
     return result
 
