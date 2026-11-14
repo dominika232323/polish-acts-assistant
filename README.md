@@ -6,10 +6,12 @@ Ustaw), downloaded from the Sejm API (`api.sejm.gov.pl/eli`).
 
 ## Usage
 
-Requirements: [uv](https://docs.astral.sh/uv/)
+Requirements: [uv](https://docs.astral.sh/uv/), [Ollama](https://ollama.com) (see below).
 
 ```bash
 make setup     # dependencies + .env
+make pull      # download the Ollama models set in .env
+make check     # smoke test: Ollama, models, chat, embedding, context window
 make fetch     # download the acts into data/raw/
 make test      # unit tests
 make coverage  # unit tests with coverage report (htmlcov/index.html)
@@ -17,6 +19,33 @@ make lint      # ruff
 ```
 
 `make help` lists all commands.
+
+## Models (Ollama)
+
+The LLM and the embedding model run locally in [Ollama](https://ollama.com) and are called
+through its OpenAI-compatible API (`openai` SDK with `base_url` from `.env`).
+
+| setting | default | |
+|---|---|---|
+| `LLM_MODEL` | `qwen3.5:4b` | runs fully on a 6 GB GPU and stays loaded next to the embedding model; `qwen3.5:9b` answers better but is slower |
+| `EMBED_MODEL` | `qwen3-embedding:0.6b` | after a change, re-index all documents |
+| `LLM_TEMPERATURE` | `0` | reproducible evaluation |
+| `LLM_REASONING_EFFORT` | `none` | disables qwen3.5 thinking mode (much faster) |
+
+All settings are in `.env` (created from `.env.example` by `make setup`); variables set in the
+shell take precedence, e.g. `LLM_MODEL=qwen3.5:9b make check`.
+
+**Context window** – Ollama's default is too small for several retrieved articles and longer
+prompts are truncated silently. Set it on the server (Linux, systemd):
+
+```bash
+sudo systemctl edit ollama
+#   [Service]
+#   Environment="OLLAMA_CONTEXT_LENGTH=16384"
+sudo systemctl restart ollama
+```
+
+`make check` verifies it (`ollama ps`, column CONTEXT, shows it too).
 
 ## Data
 
@@ -52,9 +81,14 @@ uv run python scripts/fetch_acts.py --discover  # list standalone 2026 acts in t
 
 ```
 src/acts/
-  config.py       shared paths (data, test set)
+  config.py       shared paths and settings from .env
+  llm.py          OpenAI SDK clients, chat completion
+  embeddings.py   document and query embeddings
+  check.py        environment smoke test
   fetch.py        downloading acts from the Sejm ELI API
 scripts/
+  pull_models.py  download Ollama models (make pull)
+  check_env.py    smoke test (make check)
   fetch_acts.py   command line for downloading (make fetch)
 data/raw/         downloaded acts + acts.json
 eval/golden.jsonl test set
