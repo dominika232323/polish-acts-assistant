@@ -15,6 +15,7 @@ make check     # smoke test: Ollama, models, chat, embedding, context window
 make fetch     # download the acts into data/raw/
 make parse     # save parsed text of the acts into data/parsed/
 make ingest    # index the acts into Qdrant (parse → chunk → embed)
+make ask Q="Ile Komisja ma czasu na wydanie opinii?"  # answer with cited articles
 make test      # unit tests
 make coverage  # unit tests with coverage report (htmlcov/index.html)
 make lint      # ruff
@@ -98,6 +99,26 @@ only one process can use it at a time). The collection is rebuilt from scratch o
 | `COLLECTION` | `acts2026` | |
 | `TOP_K` | `5` | number of chunks passed to the model |
 
+## Answering
+
+`make ask Q="…"` embeds the question, retrieves the `TOP_K` closest articles and asks the LLM
+to answer only from them. The model gets numbered fragments and returns JSON
+`{"answer", "citations"}` (Ollama constrains decoding to the JSON schema; an invalid answer is
+retried once). Citations are built in code from the chunk metadata, so the model cannot invent
+an article or an act:
+
+```
+Dzień Inwalidy Wojennego obchodzimy 12 kwietnia [1].
+
+Źródła:
+  [1] art. 1 ustawy o ustanowieniu Dnia Inwalidy Wojennego (Dz.U. 2026 poz. 179)
+```
+
+When the fragments do not contain the answer, the model replies "Wybrane ustawy z 2026 r. nie
+zawierają odpowiedzi na to pytanie." with no citations – an answer without any valid citation
+counts as a refusal. `ARGS="-k 8 --context"` changes the number of fragments and lists all
+retrieved ones with their scores.
+
 ## Test set
 
 `eval/golden.jsonl` – questions with expected answers and sources, one JSON object per line:
@@ -126,12 +147,15 @@ src/acts/
   chunking.py     paragraphs → chunks: one article per chunk, long ones split
   store.py        Qdrant: collection, upsert, search
   ingest.py       parse → chunk → embed → Qdrant
+  retrieve.py     question → top-k chunks
+  generate.py     prompt, JSON answer, citations built from metadata
 scripts/
   pull_models.py  download Ollama models (make pull)
   check_env.py    smoke test (make check)
   fetch_acts.py   command line for downloading (make fetch)
   parse_acts.py   save parsed text of the acts (make parse)
   ingest.py       index the acts (make ingest)
+  ask.py          answer a question (make ask)
 data/raw/         downloaded acts + acts.json
 data/parsed/      parsed text of the acts (not committed)
 eval/golden.jsonl test set

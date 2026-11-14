@@ -1,6 +1,5 @@
-.PHONY: help setup pull check fetch parse ingest test coverage lint
+.PHONY: help setup pull check fetch parse ingest ask test coverage lint
 
-DATA ?=
 Q ?=
 ARGS ?=
 
@@ -25,6 +24,9 @@ parse: ## save parsed text of the acts into data/parsed/ (for checking and readi
 
 ingest: ## index the acts into Qdrant: parse → chunk → embed (rebuilds the collection)
 	uv run python scripts/ingest.py
+
+ask: ## answer a question with cited articles: make ask Q="…" [ARGS="-k 8 --context"]
+	uv run python scripts/ask.py "$(Q)" $(ARGS)
 
 test: ## unit tests (no network)
 	uv run pytest -q
