@@ -4,7 +4,11 @@ version = "0.1.0"
 description = "RAG system answering questions about Polish acts from the 2026 Journal of Laws (Dziennik Ustaw), citing specific articles"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "httpx>=0.28.1",
+    "openai>=3.51.0",
+    "python-dotenv>=1.2.4",
+]
 
 [build-system]
 requires = ["hatchling"]

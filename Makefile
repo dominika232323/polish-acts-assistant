@@ -1,4 +1,4 @@
-.PHONY: help setup fetch test coverage lint
+.PHONY: help setup pull check fetch test coverage lint
 
 DATA ?=
 Q ?=
@@ -10,6 +10,12 @@ help: ## list commands
 setup: ## install dependencies (uv) and create .env
 	uv sync
 	@test -f .env || (cp .env.example .env && echo "Created .env from .env.example")
+
+pull: ## download the Ollama models set in .env
+	uv run python scripts/pull_models.py
+
+check: ## smoke test: Ollama, models, chat, embedding, context window
+	uv run python scripts/check_env.py
 
 fetch: ## download the acts (PDF + metadata) into data/raw/
 	uv run python scripts/fetch_acts.py $(ARGS)
