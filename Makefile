@@ -1,4 +1,4 @@
-.PHONY: help setup pull check fetch parse ingest ask test coverage lint
+.PHONY: help setup pull check fetch parse ingest ask test coverage lint eval eval-grade
 
 Q ?=
 ARGS ?=
@@ -37,3 +37,9 @@ coverage: ## unit tests with coverage report (HTML: htmlcov/index.html)
 lint: ## ruff
 	uv run ruff check src tests scripts
 	uv run ruff format --check src tests scripts
+
+eval:
+	uv run python scripts/eval_agent.py
+
+eval-grade:
+	uv run python scripts/eval_agent.py --grade
