@@ -18,7 +18,7 @@
 ## 3. Wyniki w podziale na trudność (`type`)
 | Typ pytania | Liczba | Cit./Refusal Recall | Emb. Sim | ROUGE-L | Czas (s) | Human Accuracy |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| `easy` | 11 | 81.8% | 0.868 | 0.268 | 24.12s | 9/10 |
+| `easy` | 11 | 81.8% | 0.868 | 0.268 | 24.12s | 10/11 |
 | `multi` | 6 | 50.0% | 0.773 | 0.273 | 26.54s | 5/6 |
 | `oos` | 3 | 0.0% | 0.557 | 0.340 | 18.02s | 3/3 |
 
@@ -35,7 +35,7 @@
 | `easy-06` | `easy` | 1.00 | 0.861 | 0.286 | 21.8s | **1** | poprawna odpowiedź, ale dodano niepotrzebny szczegół |
 | `easy-07` | `easy` | 0.00 | 0.906 | 0.367 | 20.1s | **1** |  |
 | `easy-08` | `easy` | 1.00 | 0.809 | 0.311 | 26.6s | **0** | agent nie wyminienił organów z nazwy tylko wskazał miejsce w ustawie gdzie są wymienione |
-| `easy-09` | `easy` | 1.00 | 0.945 | 0.538 | 20.1s | `[ ]` |  |
+| `easy-09` | `easy` | 1.00 | 0.945 | 0.538 | 20.1s | **1** |  |
 | `easy-10` | `easy` | 1.00 | 0.915 | 0.517 | 21.7s | **1** |  |
 | `easy-11` | `easy` | 0.00 | 0.936 | 0.203 | 21.0s | **1** |  |
 | `multi-1act-01` | `multi` | 1.00 | 0.786 | 0.400 | 26.2s | **1** |  |
