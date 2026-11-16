@@ -4,6 +4,7 @@ Automatyczny harness ewaluacyjny dla Polish Acts Assistant.
 Tryb 1 (domyślny): uruchamia agenta na golden.jsonl, liczy metryki automatyczne i generuje eval/report.md.
 Tryb 2 (--grade): interaktywna ocena human-in-the-loop w terminalu i aktualizacja eval/report.md.
 """
+
 import argparse
 import json
 import math
@@ -42,7 +43,7 @@ def get_embedding(text: str) -> list[float]:
 def cosine_similarity(v1: list[float], v2: list[float]) -> float:
     if not v1 or not v2 or len(v1) != len(v2):
         return 0.0
-    dot = sum(a * b for a, b in zip(v1, v2))
+    dot = sum(a * b for a, b in zip(v1, v2, strict=True))
     norm1 = math.sqrt(sum(a * a for a in v1))
     norm2 = math.sqrt(sum(b * b for b in v2))
     return dot / (norm1 * norm2) if norm1 and norm2 else 0.0
@@ -134,7 +135,7 @@ def query_agent_cli(question: str) -> str:
     if proc.returncode != 0 and not output:
         return f"[BŁĄD URUCHOMIENIA]: {proc.stderr.strip()}"
     # Odfiltrowanie ewentualnych logów make z początku
-    lines = [l for l in output.splitlines() if not l.startswith("uv run ") and not l.startswith("make[")]
+    lines = [line for line in output.splitlines() if not line.startswith(("uv run ", "make["))]
     return "\n".join(lines).strip()
 
 
@@ -154,24 +155,38 @@ def generate_markdown_report(records: list[dict], run_meta: dict) -> None:
     md.append("## 1. Konfiguracja Eksperymentu")
     md.append(f"- **Data uruchomienia:** `{run_meta['timestamp']}`")
     md.append(f"- **Liczba pytań (`golden.jsonl`):** `{n}`")
-    md.append(f"- **Parametry generacji:** `temperature = 0` (wymuszone dla powtarzalności)")
+    md.append("- **Parametry generacji:** `temperature = 0` (wymuszone dla powtarzalności)")
     md.append(f"- **Model embeddingów do metryki semantycznej:** `{EMBED_MODEL}`\n")
 
     md.append("## 2. Średnie wyniki zbiorcze")
     md.append("| Metryka | Wynik | Opis |")
     md.append("| :--- | :---: | :--- |")
     if human_acc is not None:
-        md.append(f"| **Human Accuracy (Ocena ręczna)** | **{human_acc:.1f}%** ({sum(r['human_score'] for r in graded)}/{len(graded)}) | Ostateczna poprawność merytoryczna / poprawna odmowa |")
+        md.append(
+            f"| **Human Accuracy (Ocena ręczna)** | **{human_acc:.1f}%** ({sum(r['human_score'] for r in graded)}/{len(graded)}) | Ostateczna poprawność merytoryczna / poprawna odmowa |"
+        )
     else:
-        md.append("| **Human Accuracy (Ocena ręczna)** | *Oczekuje na ocenę* | Uruchom `make eval-grade` lub wpisz `1` / `0` w tabeli poniżej |")
-    md.append(f"| **Citation / Refusal Recall** | **{avg_cit * 100:.1f}%** | Trafność cytowanych ustaw i artykułów (lub poprawna odmowa dla `oos`) |")
-    md.append(f"| **Embedding Cosine Similarity** | **{avg_emb:.3f}** | Podobieństwo semantyczne odpowiedzi do `expected_answer` |")
-    md.append(f"| **ROUGE-L (F1)** | **{avg_rouge:.3f}** | Leksykalne pokrywanie się słów z odpowiedzią wzorcową |")
-    md.append(f"| **Średni czas odpowiedzi** | **{avg_time:.2f} s** | Średni czas generacji odpowiedzi na pytanie |\n")
+        md.append(
+            "| **Human Accuracy (Ocena ręczna)** | *Oczekuje na ocenę* | Uruchom `make eval-grade` lub wpisz `1` / `0` w tabeli poniżej |"
+        )
+    md.append(
+        f"| **Citation / Refusal Recall** | **{avg_cit * 100:.1f}%** | Trafność cytowanych ustaw i artykułów (lub poprawna odmowa dla `oos`) |"
+    )
+    md.append(
+        f"| **Embedding Cosine Similarity** | **{avg_emb:.3f}** | Podobieństwo semantyczne odpowiedzi do `expected_answer` |"
+    )
+    md.append(
+        f"| **ROUGE-L (F1)** | **{avg_rouge:.3f}** | Leksykalne pokrywanie się słów z odpowiedzią wzorcową |"
+    )
+    md.append(
+        f"| **Średni czas odpowiedzi** | **{avg_time:.2f} s** | Średni czas generacji odpowiedzi na pytanie |\n"
+    )
 
     # Podsumowanie per typ pytania
     md.append("## 3. Wyniki w podziale na trudność (`type`)")
-    md.append("| Typ pytania | Liczba | Cit./Refusal Recall | Emb. Sim | ROUGE-L | Czas (s) | Human Accuracy |")
+    md.append(
+        "| Typ pytania | Liczba | Cit./Refusal Recall | Emb. Sim | ROUGE-L | Czas (s) | Human Accuracy |"
+    )
     md.append("| :--- | :---: | :---: | :---: | :---: | :---: | :---: |")
     for qtype in ["easy", "multi", "oos"]:
         sub = [r for r in records if r["type"] == qtype]
@@ -182,28 +197,48 @@ def generate_markdown_report(records: list[dict], run_meta: dict) -> None:
         sub_rouge = sum(r["rouge_l"] for r in sub) / len(sub)
         sub_time = sum(r["latency_s"] for r in sub) / len(sub)
         sub_graded = [r for r in sub if r.get("human_score") is not None]
-        h_str = f"{sum(r['human_score'] for r in sub_graded)}/{len(sub_graded)}" if sub_graded else "—"
-        md.append(f"| `{qtype}` | {len(sub)} | {sub_cit:.1f}% | {sub_emb:.3f} | {sub_rouge:.3f} | {sub_time:.2f}s | {h_str} |")
+        h_str = (
+            f"{sum(r['human_score'] for r in sub_graded)}/{len(sub_graded)}" if sub_graded else "—"
+        )
+        md.append(
+            f"| `{qtype}` | {len(sub)} | {sub_cit:.1f}% | {sub_emb:.3f} | {sub_rouge:.3f} | {sub_time:.2f}s | {h_str} |"
+        )
     md.append("")
 
     md.append("## 4. Tabela przeglądowa wyników i miejsce na ocenę ręczną")
-    md.append("> **Instrukcja oceny ręcznej:** Uruchom `make eval-grade` w terminalu, aby ocenić każde pytanie interaktywnie (`1` = poprawna / poprawna odmowa, `0` = błędna / halucynacja), albo uzupełnij kolumnę **Ocena Human** ręcznie.\n")
-    md.append("| ID | Typ | Cit. Recall | Emb. Sim | ROUGE-L | Czas | Ocena Human (0/1) | Notatka |")
+    md.append(
+        "> **Instrukcja oceny ręcznej:** Uruchom `make eval-grade` w terminalu, aby ocenić każde pytanie interaktywnie (`1` = poprawna / poprawna odmowa, `0` = błędna / halucynacja), albo uzupełnij kolumnę **Ocena Human** ręcznie.\n"
+    )
+    md.append(
+        "| ID | Typ | Cit. Recall | Emb. Sim | ROUGE-L | Czas | Ocena Human (0/1) | Notatka |"
+    )
     md.append("| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |")
     for r in records:
         h_val = f"**{r['human_score']}**" if r.get("human_score") is not None else "`[ ]`"
         note = r.get("human_note", "")
-        md.append(f"| `{r['id']}` | `{r['type']}` | {r['citation_recall']:.2f} | {r['embedding_sim']:.3f} | {r['rouge_l']:.3f} | {r['latency_s']:.1f}s | {h_val} | {note} |")
+        md.append(
+            f"| `{r['id']}` | `{r['type']}` | {r['citation_recall']:.2f} | {r['embedding_sim']:.3f} | {r['rouge_l']:.3f} | {r['latency_s']:.1f}s | {h_val} | {note} |"
+        )
     md.append("\n---\n")
 
     md.append("## 5. Szczegółowe porównanie odpowiedzi (Golden vs Agent)\n")
     for r in records:
-        src_str = ", ".join(f"{s['eli']} art. {s['art']}" + (f" ust. {s['ust']}" if s.get("ust") else "") for s in r["sources"]) or "BRAK (OOS)"
-        md.append(f"### `{r['id']}` (`{r['type']}`) — Cit. Recall: `{r['citation_recall']:.2f}` | Emb. Sim: `{r['embedding_sim']:.3f}` | Czas: `{r['latency_s']:.1f}s`")
+        src_str = (
+            ", ".join(
+                f"{s['eli']} art. {s['art']}" + (f" ust. {s['ust']}" if s.get("ust") else "")
+                for s in r["sources"]
+            )
+            or "BRAK (OOS)"
+        )
+        md.append(
+            f"### `{r['id']}` (`{r['type']}`) — Cit. Recall: `{r['citation_recall']:.2f}` | Emb. Sim: `{r['embedding_sim']:.3f}` | Czas: `{r['latency_s']:.1f}s`"
+        )
         md.append(f"- **Pytanie:** {r['question']}")
         md.append(f"- **Oczekiwane źródła:** `{src_str}`")
         md.append(f"- **Oczekiwana odpowiedź (Golden):** {r['expected_answer']}")
-        md.append(f"- **Odpowiedź agenta:**\n> {r['actual_answer'].replace(chr(10), chr(10) + '> ')}\n")
+        md.append(
+            f"- **Odpowiedź agenta:**\n> {r['actual_answer'].replace(chr(10), chr(10) + '> ')}\n"
+        )
 
     REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
     REPORT_PATH.write_text("\n".join(md), encoding="utf-8")
@@ -215,7 +250,11 @@ def run_evaluation():
         print(f"Błąd: Brak pliku {GOLDEN_PATH}")
         sys.exit(1)
 
-    items = [json.loads(line) for line in GOLDEN_PATH.read_text(encoding="utf-8").splitlines() if line.strip()]
+    items = [
+        json.loads(line)
+        for line in GOLDEN_PATH.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
     print(f"Rozpoczynam ewaluację {len(items)} pytań z {GOLDEN_PATH}...\n")
 
     results = []
@@ -234,22 +273,26 @@ def run_evaluation():
         emb_ref = get_embedding(item["expected_answer"])
         emb_sim = cosine_similarity(emb_pred, emb_ref)
 
-        print(f"       -> Czas: {latency:.1f}s | Cit.Recall: {cit_recall:.2f} | Emb.Sim: {emb_sim:.3f} | ROUGE-L: {rouge:.3f}")
+        print(
+            f"       -> Czas: {latency:.1f}s | Cit.Recall: {cit_recall:.2f} | Emb.Sim: {emb_sim:.3f} | ROUGE-L: {rouge:.3f}"
+        )
 
-        results.append({
-            "id": qid,
-            "type": item["type"],
-            "question": item["question"],
-            "expected_answer": item["expected_answer"],
-            "sources": item.get("sources", []),
-            "actual_answer": actual,
-            "latency_s": round(latency, 2),
-            "citation_recall": round(cit_recall, 4),
-            "embedding_sim": round(emb_sim, 4),
-            "rouge_l": round(rouge, 4),
-            "human_score": None,
-            "human_note": "",
-        })
+        results.append(
+            {
+                "id": qid,
+                "type": item["type"],
+                "question": item["question"],
+                "expected_answer": item["expected_answer"],
+                "sources": item.get("sources", []),
+                "actual_answer": actual,
+                "latency_s": round(latency, 2),
+                "citation_recall": round(cit_recall, 4),
+                "embedding_sim": round(emb_sim, 4),
+                "rouge_l": round(rouge, 4),
+                "human_score": None,
+                "human_note": "",
+            }
+        )
 
     payload = {
         "meta": {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")},
@@ -273,7 +316,9 @@ def run_human_grading():
 
     for idx, r in enumerate(records, 1):
         print("=" * 70)
-        print(f"[{idx}/{len(records)}] ID: {r['id']} | Typ: {r['type']} | Auto Cit.Recall: {r['citation_recall']}")
+        print(
+            f"[{idx}/{len(records)}] ID: {r['id']} | Typ: {r['type']} | Auto Cit.Recall: {r['citation_recall']}"
+        )
         print(f"PYTANIE:   {r['question']}")
         print(f"ŹRÓDŁA:    {r['sources']}")
         print(f"WZORZEC:   {r['expected_answer']}")
@@ -298,7 +343,9 @@ def run_human_grading():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--grade", action="store_true", help="Uruchom interaktywną ocenę ręczną wyników")
+    parser.add_argument(
+        "--grade", action="store_true", help="Uruchom interaktywną ocenę ręczną wyników"
+    )
     args = parser.parse_args()
 
     if args.grade:
